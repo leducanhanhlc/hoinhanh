@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io('http://localhost:3000');
+    socket.emit('hulla', '');
+    socket.on('bossgoing', function (data) {
+        if(data.check == 'false') {
+            console.log('asd');
+            var pro = prompt("Hello");
+            socket.emit('hulla', pro);
+        } else {
+            console.log("dung roi");
+            window.location = 'http://localhost:3000/admin/nole' + data.chia;
+        }
+    });
+
+</script>
+<body>
+    Error;
+</body>
+</html>

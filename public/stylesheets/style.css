@@ -1,0 +1,80 @@
+html, body {
+    width : 100%;
+    height : 100%;
+    margin-top : 0px;
+    margin-left : 0px;
+    margin-right : 0px;
+    margin-bottom : 0px;
+    background-color : #FFFFFF;
+}
+
+header {
+    width : 100%;
+    height : 100px;
+    margin-top : 0px;
+    margin-left : 0px;
+    margin-right : 0px;
+}
+
+footer {
+    width : 100%;
+    height : 150px;
+}
+
+.center {
+    width : 100%;
+    height : 550px;
+    margin-left : 0px;
+    margin-right : 0px;
+}
+
+.lcenter {
+    float : left;
+    height : 100%;
+    width : 20%;
+}
+
+.mcenter {
+    float : left;
+    height : 100%;
+    width : 60%;
+}
+
+.rcenter{
+    float : right;
+    height : 100%;
+    width : 20%;
+}
+
+.messagearea{
+    font-size : 18px;
+    margin-top : 0px;
+    width : 100%;
+    height : 80%;
+    background-color : #2E2E2E;
+    overflow-y : auto;
+    color: crimson;
+    border-radius : 15px;
+}
+
+.searchbox {
+    width : 100%;
+    height : 10%;
+
+}
+
+.typebox {
+    float : left;
+    width : 70%;
+    height: 80%;
+    margin-top : 10px;
+    text-align : center;
+    font-size : 18px;
+}
+
+.submitbutton {
+    float :right ;
+    width : 20%;
+    height : 90%;
+    margin-top : 10px;
+}

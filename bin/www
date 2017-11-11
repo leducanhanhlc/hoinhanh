@@ -1,0 +1,198 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('untitled4:server');
+var http = require('http');
+var chia = require('../ducanh/chia');
+var usercnting = 0;
+
+
+var arrcnecting = [];
+var arrcnected = [];
+var content = [];
+var contentsize = [];
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '3000');
+app.app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app.app);
+var io = require('socket.io')(server);
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+app.retrievfirebasedata();
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
+
+var tabadmin = 0;
+
+io.on('connection', function (socket) {
+
+    socket.on('userconnecting', function () {
+        console.log('1 user is connecting')
+        for (i = 1; i <= 100000; i++) {
+            if (!arrcnected[i]) {
+                arrcnecting[i] = 1;
+                socket.id = i;
+                break;
+            }
+        }
+        var s = app.setid(socket.id);
+        var itv = setInterval(function () {
+            if(String(s) == String(socket.id)) {
+                socket.emit('get_id_successfully', socket.id);
+                usercnting++;
+                clearInterval(itv);
+            }
+        }, 150);
+
+    });
+
+    socket.on('taoden', function (data) {
+        console.log('1 user connected');
+        arrcnecting[data] = 0;
+        arrcnected[data] = 1;
+        content[data] = [];
+        contentsize[data] = 0;
+        setInterval(function () {
+            if(content[data].length > contentsize[data]) {
+                contentsize[data] = content[data].length;
+                socket.emit('adminsend', content[data][contentsize[data] - 1]);
+            }
+        }, 100);
+
+        socket.on('newusermassage', function (massage) {
+            content[data].push(massage);
+            contentsize[data]++;
+            if(app.getautomode()) {
+                content[data].push(app.answer(massage));
+            }
+            socket.emit('massageboxchange', massage);
+        });
+        socket.on('disconnect', function () {
+            content[data] = [];
+            usercnting--;
+            arrcnected[data] = 0;
+        });
+    });
+
+    socket.on('hulla', function (data) {
+        if(data == chia.tsec) {
+            socket.emit('bossgoing', {check : 'true', chia : chia.tsec});
+
+        } else {
+            socket.emit('bossgoing', {check : 'false', chia : ''});
+        }
+    });
+
+
+
+    socket.on('toidenroi', function () {
+        console.log('HAVE ' + usercnting + ' connected')
+        tabadmin++;
+        console.log('GET '+ tabadmin + ' TAB ADMIN');
+        socket.on('disconnect', function () {
+           tabadmin--;
+        });
+
+        setInterval(function () {
+            socket.emit('connecteduserlist', arrcnected);
+        }, 1000);
+    });
+
+    socket.on('accessusercheck', function (data) {
+        if(data.check == chia.tsec) {
+            setInterval(function () {
+                if(contentsize[data.id] > 0) {
+                    socket.emit('acceptaccess', content[data.id]);
+                }
+            }, 100);
+            socket.on('newadminmassage', function (_data) {
+                app.save({ques : content[_data.id][content[_data.id].length - 1],
+                                ans : _data.massage});
+                content[_data.id].push(_data.massage);
+            });
+
+
+        }
+    });
+});
+
+
+
+
+

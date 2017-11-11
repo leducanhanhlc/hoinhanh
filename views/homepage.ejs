@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io('http://localhost:3000');
+    socket.emit('userconnecting', {});
+    socket.on('get_id_successfully', function (data) {
+        window.location = 'http://localhost:3000/user/' + data;
+    });
+    console.log("hello ");
+</script>
+<body>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io('http://localhost:3000/');
+    var automode = 0;
+    socket.emit('toidenroi', {});
+    function changebackground() {
+        var automodeform = document.getElementById('automodeform');
+
+        if(automode == 1) {
+            automodeform.action = 'auto=1';
+            document.body.style.backgroundColor = '#FF4000';
+        }
+
+        if(automode == 0) {
+            automodeform.action = 'auto=0';
+            document.body.style.backgroundColor = '#FFFFFF';
+        }
+
+        if(automode == 1) automode = 0;
+        if(automode == 0) automode = 1;
+    }
+
+    socket.on('connecteduserlist', function (data) {
+        var div = document.createElement('div');
+        var userlist = document.getElementById('userlist');
+        for(i = 0; i < data.length; i++) {
+            if(data[i]) {
+                var button = document.createElement('button');
+                var form = document.createElement('form');
+                form.method = "post";
+                form.action = "open/id=" + i;
+                button.textContent = "User " + i + " connected";
+                button.target = "_blank";
+                button.id = "user" + i;
+                form.appendChild(button);
+                div.appendChild(form);
+            }
+        }
+        if(userlist.childNodes.length > 0) userlist.removeChild(userlist.childNodes[0]);
+        userlist.appendChild(div);
+    });
+</script>
+<body>
+    <div id = "userlist"></div>
+    <button id="automodebutton" onclick="changebackground()">
+        Changeautomode
+    </button>
+    <form id="automodeform" method="post">
+        <button type="submit" id="startautomode" onclick="changebackground()">
+            Startautomode
+        </button>
+    </form>
+</body>
+</html>

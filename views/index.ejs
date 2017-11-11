@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io('http://localhost:3000/');
+    var massage = '';
+    socket.emit('taoden', String(<%=id%>));
+    socket.on('massageboxchange', function (data) {
+        var massagebox = document.getElementById('messagearea');
+        var para = document.createElement("div");
+        var ul = document.createElement("ul");
+        ul.innerHTML = data;
+        para.appendChild(ul);
+        //massagebox.removeChild(massagebox.childNodes[0]); ;
+        massagebox.appendChild(para);
+        massagebox.scrollTop = massagebox.scrollHeight;
+    });
+
+    socket.on('adminsend', function (data) {
+        var massagebox = document.getElementById('messagearea');
+        var para = document.createElement("div");
+        var ul = document.createElement("ul");
+        ul.innerHTML = data;
+        ul.style.color = '#58FAF4';
+        para.appendChild(ul);
+        //massagebox.removeChild(massagebox.childNodes[0]); ;
+        massagebox.appendChild(para);
+        massagebox.scrollTop = massagebox.scrollHeight;
+    });
+    function sendmessage() {
+        scriptbox = document.getElementById('typebox');
+        massage = typebox.value;
+        typebox.value = ''
+        socket.emit('newusermassage', massage);
+    }
+
+    function runscript(event) {
+        if(event.keyCode == '13' || event.which == '13') {
+            sendmessage();
+        }
+    }
+
+</script>
+<body>
+<header>
+</header>
+<div class = 'center'>
+  <div class = 'lcenter'>
+  </div>
+  <div class = 'mcenter'>
+    <div class = 'messagearea' id="messagearea">
+    </div>
+    <div class = 'searchbox'>
+      <input id="typebox" class = 'typebox' placeholder  = "Type here" onkeydown="runscript(event)">
+      </input>
+      <button class = 'submitbutton' onclick="sendmessage()">
+        Gửi
+      </button>
+    </div>
+  </div>
+  <div class = 'rcenter'>
+  </div>
+</div>
+<footer>
+</footer>
+</body>
+</html>
